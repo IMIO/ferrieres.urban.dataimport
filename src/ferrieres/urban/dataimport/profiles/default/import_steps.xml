@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<import-steps>
+
+ <import-step
+    id="ferrieres.urban.dataimport-ferrieresUrbawebImport"
+    handler="ferrieres.urban.dataimport.importer.importFerrieresUrbaweb"
+    title="Urbaweb import for Ferrieres">
+  Urbaweb import for Ferrieres
+ </import-step>
+
+</import-steps>
