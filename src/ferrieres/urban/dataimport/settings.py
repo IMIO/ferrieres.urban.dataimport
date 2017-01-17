@@ -3,7 +3,7 @@
 from imio.urban.dataimport.browser.controlpanel import ImporterControlPanel
 from imio.urban.dataimport.browser.import_panel import ImporterSettings
 from imio.urban.dataimport.browser.import_panel import ImporterSettingsForm
-from imio.urban.dataimport.agorawin.settings import AgorawinImporterFromImportSettings
+from imio.urban.dataimport.access.settings import AccessImporterFromImportSettings
 
 
 class FerrieresImporterSettingsForm(ImporterSettingsForm):
@@ -19,7 +19,7 @@ class FerrieresImporterControlPanel(ImporterControlPanel):
     import_form = FerrieresImporterSettings
 
 
-class FerrieresImporterFromImportSettings(AgorawinImporterFromImportSettings):
+class FerrieresImporterFromImportSettings(AccessImporterFromImportSettings):
     """ """
 
     def get_importer_settings(self):
