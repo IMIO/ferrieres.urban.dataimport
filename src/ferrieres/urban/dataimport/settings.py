@@ -19,19 +19,3 @@ class FerrieresImporterControlPanel(ImporterControlPanel):
     import_form = FerrieresImporterSettings
 
 
-class FerrieresImporterFromImportSettings(AccessImporterFromImportSettings):
-    """ """
-
-    def get_importer_settings(self):
-        """
-        Return the db name to read.
-        """
-        settings = super(FerrieresImporterFromImportSettings, self).get_importer_settings()
-
-        db_settings = {
-            'db_name': '',
-        }
-
-        settings.update(db_settings)
-
-        return settings
