@@ -5,12 +5,12 @@ from imio.urban.dataimport.mapping import table
 VALUES_MAPS = {
 
     'division_map': {
-        'I': '1',
-        'II': '2',
-        'III': '3',
-        'IV': '4',
-        'V': '5',
-        'VI': '6',
+        '1ère': '1',
+        '2ème': '2',
+        '3ème': '3',
+        '4ème': '4',
+        '5ème': '5',
+        '5me': '5',
     },
 
     'eventtype_id_map': table({

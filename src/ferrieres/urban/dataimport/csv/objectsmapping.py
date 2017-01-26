@@ -21,8 +21,12 @@ FIELDS_MAPPINGS = {
         'mappers': {
             SimpleMapper: (
                 {
-                    'from': 'ref',
+                    'from': 'num registre',
                     'to': 'referenceDGATLP',
+                },
+                {
+                     'from': 'Actes et travaux',
+                     'to': 'licenceSubject',
                 },
             ),
 
@@ -36,21 +40,16 @@ FIELDS_MAPPINGS = {
                 'to': ('portal_type', 'folderCategory',)
             },
 
-            LicenceSubjectMapper: {
-                'from': ('Genre de Travaux', 'Divers'),
-                'to': 'licenceSubject',
-            },
-
             WorklocationMapper: {
-                'from': ('Adresse', 'num'),
+                'from': ('Nom de rue', 'num maison', 'Localite'),
                 'to': 'workLocations',
             },
 
-           ArchitectMapper: {
-               'allowed_containers': ['BuildLicence'],
-               'from': ('Architecte',),
-               'to': ('architects',)
-           },
+           # ArchitectMapper: {
+           #     'allowed_containers': ['BuildLicence'],
+           #     'from': ('Architecte',),
+           #     'to': ('architects',)
+           # },
 
             # WorkTypeMapper: {
             #     'allowed_containers': ['BuildLicence', 'ParcelOutLicence'],
@@ -166,7 +165,7 @@ FIELDS_MAPPINGS = {
 
         'mappers': {
             ParcelDataMapper: {
-                'from': ('num parcelle', 'Sect', 'Div'),
+                'from': ('Num parcelles', 'Section', 'Division'),
                 'to': (),
             },
         },
@@ -183,11 +182,11 @@ FIELDS_MAPPINGS = {
                     'to': 'name1',
                 },
                 {
-                    'from': ('num'),
-                    'to': 'number',
+                    'from': 'Prenom',
+                    'to': 'name2',
                 },
                 {
-                    'from': ('Adresse'),
+                    'from': ('Nom de rue'),
                     'to': 'street',
                 },
             ),
@@ -196,6 +195,11 @@ FIELDS_MAPPINGS = {
                 'from': ('Nom', 'ref'),
                 'to': 'id',
             },
+
+            NumberBoxMapper: {
+                'from': ('num maison', 'boite'),
+                'to': 'number',
+            }
         },
     },
 
@@ -215,17 +219,17 @@ FIELDS_MAPPINGS = {
             },
 
             DecisionEventDateMapper: {
-                'from': 'date permis',
+                'from': 'Date octroi',
                 'to': 'decisionDate',
             },
 
             DecisionEventDecisionMapper: {
-                'from': 'date permis',
+                'from': 'Date octroi',
                 'to': 'decision',
             },
 
             DecisionEventNotificationDateMapper: {
-                'from': 'date permis',
+                'from': 'Date octroi',
                 'to': 'eventDate',
             }
         },

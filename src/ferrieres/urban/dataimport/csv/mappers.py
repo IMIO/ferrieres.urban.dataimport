@@ -56,24 +56,19 @@ class PortalTypeMapper(Mapper):
         return foldercategory
 
 
-class LicenceSubjectMapper(Mapper):
-    def mapLicencesubject(self, line):
-        object1 = self.getData('Genre de Travaux')
-        object2 = self.getData('Divers')
-        return '%s %s' % (object1, object2)
-
-
 class WorklocationMapper(Mapper):
     def mapWorklocations(self, line):
-        num = self.getData('num')
+        num = self.getData('num maison')
         noisy_words = set(('d', 'du', 'de', 'des', 'le', 'la', 'les', 'à', ',', 'rues', 'terrain', 'terrains', 'garage', 'magasin', 'entrepôt'))
-        raw_street = self.getData('Adresse')
+        raw_street = self.getData('Nom de rue')
         if raw_street.endswith(')'):
             raw_street = raw_street[:-5]
         street = cleanAndSplitWord(raw_street)
         street_keywords = [word for word in street if word not in noisy_words and len(word) > 1]
         if len(street_keywords) and street_keywords[-1] == 'or':
             street_keywords = street_keywords[:-1]
+        locality = self.getData('Localite')
+        street_keywords.extend(cleanAndSplitWord(locality))
         brains = self.catalog(portal_type='Street', Title=street_keywords)
         if len(brains) == 1:
             return ({'street': brains[0].UID, 'number': num},)
@@ -308,6 +303,12 @@ class ContactIdMapper(Mapper):
         return normalizeString(self.site.portal_urban.generateUniqueId(name))
 
 
+class NumberBoxMapper(Mapper):
+    def mapNumber(self, line):
+        name = '%s%s' % (self.getData('num maison'), self.getData('boite'))
+        return name
+
+
 class ContactTitleMapper(Mapper):
     def mapPersontitle(self, line):
         title1 = self.getData('Civi').lower()
@@ -428,15 +429,15 @@ class ParcelFactory(BaseFactory):
 
 class ParcelDataMapper(Mapper):
     def map(self, line, **kwargs):
-        section = self.getData('Sect', line).upper()
+        section = self.getData('Section', line).upper()
         division_map = self.getValueMapping('division_map')
-        division = division_map.get((self.getData('Div', line)).strip())
-        remaining_reference = self.getData('num parcelle', line)
+        division = division_map.get((self.getData('Division', line)).strip())
+        remaining_reference = self.getData('Num parcelles', line)
         if not remaining_reference:
             return []
 
         abbreviations = identify_parcel_abbreviations(remaining_reference)
-        if not division or not section or division == 'NA' or section == 'NA':
+        if not division or not section:
             return []
         base_reference = parse_cadastral_reference(division + section + abbreviations[0])
 
@@ -672,7 +673,7 @@ class DecisionEventIdMapper(Mapper):
 
 class DecisionEventDateMapper(Mapper):
     def mapDecisiondate(self, line):
-        date = self.getData('date permis')
+        date = self.getData('Date octroi')
         if not date:
             self.logError(self, line, 'No decision date found')
             raise NoObjectToCreateException
@@ -681,7 +682,7 @@ class DecisionEventDateMapper(Mapper):
 
 class DecisionEventDecisionMapper(Mapper):
     def mapDecision(self, line):
-        date = self.getData('date permis')
+        date = self.getData('Date octroi')
         if not date:
             return u'Défavorable'
         try:
@@ -709,7 +710,7 @@ class DecisionEventTitleMapper(Mapper):
 
 class DecisionEventNotificationDateMapper(Mapper):
     def mapEventdate(self, line):
-        eventDate = self.getData('date permis')
+        eventDate = self.getData('Date octroi')
         if eventDate:
             return eventDate
         else:
