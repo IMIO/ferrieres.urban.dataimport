@@ -239,12 +239,19 @@ class CompletionStateMapper(PostCreationMapper):
     def map(self, line, plone_object):
         self.line = line
         state = ''
-        if self.getData('Autorisa') or self.getData('TutAutorisa'):
-            state = 'accepted'
-        elif self.getData('Refus') or self.getData('TutRefus'):
-            state = 'refused'
-        else:
-            return
+        date = self.getData('Date octroi')
+        try:
+            datetime.datetime.strptime(date, "%d/%m/%Y")
+            state =  'accept'
+        except ValueError:
+            pass
+
+        if state != 'accept':
+            if date == 'ABANDON':
+                state = 'retired'
+            else:
+                state = 'refused'
+
         workflow_tool = api.portal.get_tool('portal_workflow')
         workflow_def = workflow_tool.getWorkflowsFor(plone_object)[0]
         workflow_id = workflow_def.getId()
@@ -298,7 +305,7 @@ class ContactFactory(BaseFactory):
 
 class ContactIdMapper(Mapper):
     def mapId(self, line):
-        name = '%s%s' % (self.getData('Nom'), self.getData('ref'))
+        name = '%s%s' % (self.getData('Nom'), self.getData('id'))
         name = name.replace(' ', '').replace('-', '')
         return normalizeString(self.site.portal_urban.generateUniqueId(name))
 
@@ -686,7 +693,7 @@ class DecisionEventDecisionMapper(Mapper):
         if not date:
             return u'Défavorable'
         try:
-            datetime.datetime.strptime(date, "%d/%m/%y")
+            datetime.datetime.strptime(date, "%d/%m/%Y")
             return 'Favorable'
         except ValueError:
             return u'Défavorable'
